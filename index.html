@@ -4,7 +4,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Lean Bulk Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -229,10 +228,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-si
 <div class="modal-overlay" id="exit-modal">
   <div class="modal">
     <div class="modal-title">Unsaved Session</div>
-    <div class="modal-text">You have an active session. Do you want to save it before leaving?</div>
-    <div class="modal-btns">
-      <button class="btn btn-outline btn-sm" onclick="discardAndLeave()">Discard</button>
-      <button class="btn btn-green btn-sm" onclick="saveAndLeave()">Save & Leave</button>
+    <div class="modal-text">You have an active session. What would you like to do?</div>
+    <div class="modal-btns" style="flex-direction:column;gap:8px;">
+      <button class="btn btn-green btn-sm" onclick="saveAndLeave()">✓ Save & Leave</button>
+      <button class="btn btn-outline btn-sm" onclick="discardAndLeave()">✗ Discard & Leave</button>
+      <button class="btn btn-outline btn-sm" onclick="stayOnPage()" style="border-color:var(--green);color:var(--green);">← Stay on Session</button>
     </div>
   </div>
 </div>
@@ -383,6 +383,7 @@ const PROGRAM = [
     exercises:[
       {name:'Wide Neutral Grip Pulldown', sets:3, reps:'10–12', cue:'Thumbless hook grip. Depress shoulders down before pulling.', alts:['Wide Grip Pulldown','Pull-Ups']},
       {name:'Chest-Supported T-Bar Rows', sets:3, reps:'8–10', cue:'Pull to the hip, not the armpit. Keep lower back tight.', alts:['Chest-Supported DB Rows','Seated Cable Row']},
+      {name:'Single Arm DB Rows', sets:3, reps:'8–10', cue:'Full stretch at top. Drive elbow far behind torso. Brace core.', alts:['Single Arm Cable Row','Meadows Row']},
       {name:'Cable Lat Extensions', sets:2, reps:'10–12', cue:'Keep slight bend in elbows. Stretch lats at top.', alts:['DB Pullover','Straight Arm Pulldown']},
       {name:'Machine Preacher Curls', sets:3, reps:'10–12', cue:'Triceps flat on pad. Keep wrists neutral.', alts:['EZ Bar Preacher Curl','Single Arm DB Preacher']},
       {name:'Cable Face Pulls', sets:2, reps:'15–20', cue:'Pull hands apart as they approach face. Squeeze shoulder blades.', alts:['Bent Over DB Rear Delt Flyes','Cable Rear Delt Flyes']},
@@ -415,7 +416,7 @@ const PROGRAM = [
       {name:'Seated Leg Curls', sets:3, reps:'10–12', cue:'Full stretch at top. Control the eccentric throughout.', alts:['Nordic Curl','Single Leg Curl']},
       {name:'45° Hyperextension', sets:2, reps:'15', cue:'Squeeze glutes; do not overextend lower back.', alts:['Glute-Ham Raise','Nordic Curl']},
       {name:'Machine Lat Pulldown', sets:3, reps:'15', cue:'Bar to upper collarbone. Thumbless grip.', alts:['Wide Grip Pull-ups','Assisted Pull-ups']},
-      {name:'Cable Lat Pullover', sets:2, reps:'12', cue:'Core tight; isolate lats without swinging.', alts:['Straight Arm Pulldown','DB Pullover']},
+      {name:'Seated Cable Rows', sets:3, reps:'10–12', cue:'Pull to navel. Squeeze shoulder blades. Control the return.', alts:['Cable Lat Pullover','Single Arm Cable Row']},
       {name:'Seated Calf Raises', sets:2, reps:'20', cue:'Deep stretch at bottom. 2s pause. Full extension at top.', alts:['Standing Calf Raises','Leg Press Calf Raises']}
     ]
   },
@@ -499,6 +500,11 @@ function _doShowPage(name,btn){
   if(name==='recovery')renderRecoveryHistory();
   if(name==='summary'){weekOffset=0;renderSummary();}
   document.getElementById('nav-progress').textContent='';
+}
+
+function stayOnPage(){
+  document.getElementById('exit-modal').classList.remove('show');
+  pendingNavPage=null;pendingNavBtn=null;
 }
 
 function discardAndLeave(){
